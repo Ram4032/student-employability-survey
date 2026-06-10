@@ -73,8 +73,8 @@ export default function Home() {
     out: { opacity: 0, scale: 1.02 }
   };
 
-  const pageTransition = {
-    type: "tween" as const,
+  const pageTransition: any = {
+    type: "tween",
     ease: "anticipate",
     duration: 0.5
   };

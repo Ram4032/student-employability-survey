@@ -82,11 +82,11 @@ export const calculateScore = (answers: Record<string, string | number>): ScoreR
   if (answers["q12_certifications"] === "None") {
     recommendations.push("Pursue relevant professional certifications in your industry to validate your expertise.");
   }
-  if (answers["q21_public_speaking"] <= 3) {
+  if (Number(answers["q21_public_speaking"]) <= 3) {
     improvements.push("Public Speaking");
     recommendations.push("Join a public speaking group (e.g., Toastmasters) or practice presenting to build confidence.");
   }
-  if (answers["q22_interview_readiness"] <= 3) {
+  if (Number(answers["q22_interview_readiness"]) <= 3) {
     improvements.push("Interview Skills");
     recommendations.push("Conduct mock interviews with peers or mentors to improve response delivery.");
   }

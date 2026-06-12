@@ -19,6 +19,7 @@ export const saveResponseToDatabase = async (data: Record<string, string | numbe
         console.error("Error inserting to Supabase:", error);
         throw error;
       }
+      console.log("Successfully saved response to Supabase database!", data);
       return { success: true };
     } catch (err) {
       console.error("Supabase Error:", err);

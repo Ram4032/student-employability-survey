@@ -9,7 +9,7 @@ export const supabase = supabaseUrl && supabaseAnonKey
   ? createClient(supabaseUrl, supabaseAnonKey)
   : null;
 
-export const saveResponseToDatabase = async (data: any) => {
+export const saveResponseToDatabase = async (data: Record<string, string | number>) => {
   if (supabase) {
     try {
       const { error } = await supabase

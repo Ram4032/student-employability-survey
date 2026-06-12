@@ -77,7 +77,7 @@ export const IntroView: React.FC<IntroViewProps> = ({ onContinue }) => {
 };
 
 // Simple helper icon just for this file
-function GraduationCapIcon(props: any) {
+function GraduationCapIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
     <svg
       {...props}

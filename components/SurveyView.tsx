@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { Question, Section } from '../app/data/questions';
+import { Section } from '../app/data/questions';
 
 interface SurveyViewProps {
   sections: Section[];
@@ -20,6 +20,33 @@ export const SurveyView: React.FC<SurveyViewProps> = ({ sections, initialAnswers
 
   const currentQuestion = allQuestions[currentIndex];
   const currentSection = sections.find(s => s.questions.some(q => q.id === currentQuestion.id));
+
+  const handleNext = useCallback((currentAnswers = answers) => {
+    if (currentIndex < totalQuestions - 1) {
+      setDirection(1);
+      setCurrentIndex(prev => prev + 1);
+    } else {
+      onComplete(currentAnswers);
+    }
+  }, [currentIndex, totalQuestions, onComplete, answers]);
+
+  const handlePrev = useCallback(() => {
+    if (currentIndex > 0) {
+      setDirection(-1);
+      setCurrentIndex(prev => prev - 1);
+    }
+  }, [currentIndex]);
+
+  const handleSelect = useCallback((value: string | number) => {
+    const newAnswers = { ...answers, [currentQuestion.id]: value };
+    setAnswers(newAnswers);
+    onSaveProgress(newAnswers);
+    
+    // Auto-advance after short delay
+    setTimeout(() => {
+      handleNext(newAnswers);
+    }, 400);
+  }, [answers, currentQuestion.id, onSaveProgress, handleNext]);
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -40,34 +67,7 @@ export const SurveyView: React.FC<SurveyViewProps> = ({ sections, initialAnswers
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentIndex, answers, currentQuestion]);
-
-  const handleSelect = (value: string | number) => {
-    const newAnswers = { ...answers, [currentQuestion.id]: value };
-    setAnswers(newAnswers);
-    onSaveProgress(newAnswers);
-    
-    // Auto-advance after short delay
-    setTimeout(() => {
-      handleNext(newAnswers);
-    }, 400);
-  };
-
-  const handleNext = (currentAnswers = answers) => {
-    if (currentIndex < totalQuestions - 1) {
-      setDirection(1);
-      setCurrentIndex(prev => prev + 1);
-    } else {
-      onComplete(currentAnswers);
-    }
-  };
-
-  const handlePrev = () => {
-    if (currentIndex > 0) {
-      setDirection(-1);
-      setCurrentIndex(prev => prev - 1);
-    }
-  };
+  }, [answers, currentQuestion, handleNext, handlePrev, handleSelect]);
 
   const progress = ((currentIndex) / totalQuestions) * 100;
   const isAnswered = answers[currentQuestion.id] !== undefined;

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, Transition } from 'framer-motion';
 
 import { LandingView } from '../components/LandingView';
 import { IntroView } from '../components/IntroView';
@@ -26,7 +26,10 @@ export default function Home() {
     const drafted = localStorage.getItem("survey_draft");
     if (drafted) {
       try {
-        setAnswers(JSON.parse(drafted));
+        const parsed = JSON.parse(drafted);
+        setTimeout(() => {
+          setAnswers(parsed);
+        }, 0);
       } catch (e) {
         console.error("Error parsing drafted answers", e);
       }
@@ -73,7 +76,7 @@ export default function Home() {
     out: { opacity: 0, scale: 1.02 }
   };
 
-  const pageTransition: any = {
+  const pageTransition: Transition = {
     type: "tween",
     ease: "anticipate",
     duration: 0.5
